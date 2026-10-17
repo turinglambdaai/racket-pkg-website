@@ -121,9 +121,10 @@
 
 ;; Emails the authors of packages whose build status newly became a
 ;; failure. Only ok->failing transitions notify, so a package that
-;; keeps failing does not re-notify on every run, and the first run
-;; after deployment (which has no previous summary to compare against)
-;; never notifies.
+;; keeps failing does not re-notify on every run. Without a previous
+;; summary on disk (cold start) nothing is notified; a server that
+;; already has one compares against it, so the first run after
+;; deploying this code notifies only transitions since that snapshot.
 (define (notify-build-transitions! old-summary new-summary)
   (unless (and (hash? old-summary) (hash? new-summary))
     (log! "build-update: no comparable previous summary; skipping notifications")
